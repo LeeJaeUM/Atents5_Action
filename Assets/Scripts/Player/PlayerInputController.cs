@@ -64,6 +64,7 @@ public class PlayerInputController : MonoBehaviour
     const float AnimatorStopSpeed = 0.0f;
     const float AnimatorWalkSpeed = 0.3f;
     const float AnimatorRunSpeed = 1.0f;
+    float rotateSpeed = 10f;
 
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
@@ -95,6 +96,8 @@ public class PlayerInputController : MonoBehaviour
     {
         characterController.Move(Time.deltaTime * currentSpeed * inputDirection);   // 좀 더 수동
         //characterController.SimpleMove(currentSpeed * inputDirection);            // 좀 더 자동
+
+        MoveRotate();
     }
 
     /// <summary>
@@ -155,5 +158,17 @@ public class PlayerInputController : MonoBehaviour
                 animator.SetFloat(Speed_Hash, AnimatorRunSpeed);
                 break;
         }
+    }
+
+
+    void MoveRotate()
+    {
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+
+        cameraForward.y = 0;
+        cameraRight.y = 0;
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(inputDirection), Time.deltaTime * rotateSpeed);
     }
 }
