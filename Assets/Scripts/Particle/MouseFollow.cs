@@ -34,5 +34,7 @@ public class MouseFollow : MonoBehaviour
 
         mousePos.z = 10.0f;
         Vector3 target = Camera.main.ScreenToWorldPoint(mousePos);  //스크린 좌표 월드좌표로 바꾸기
+
+        transform.position = target;
     }
 }
