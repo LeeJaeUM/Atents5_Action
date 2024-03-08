@@ -55,6 +55,13 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     Vector3 inputDirection = Vector3.zero;  // y는 무조건 바닥 높이
 
+    /// <summary>
+    /// 캐릭터가 이동방향으로 바라볼 수 있도록 회전
+    /// </summary>
+    Quaternion targetRotation = Quaternion.identity;
+
+    public float turnSpeed = 10.0f;
+
     // 컴포넌트들
     Animator animator;
     CharacterController characterController;
@@ -64,7 +71,6 @@ public class PlayerInputController : MonoBehaviour
     const float AnimatorStopSpeed = 0.0f;
     const float AnimatorWalkSpeed = 0.3f;
     const float AnimatorRunSpeed = 1.0f;
-    float rotateSpeed = 10f;
 
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
@@ -97,7 +103,7 @@ public class PlayerInputController : MonoBehaviour
         characterController.Move(Time.deltaTime * currentSpeed * inputDirection);   // 좀 더 수동
         //characterController.SimpleMove(currentSpeed * inputDirection);            // 좀 더 자동
 
-        MoveRotate();
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);  //목표 회전으로 변경
     }
 
     /// <summary>
@@ -115,6 +121,10 @@ public class PlayerInputController : MonoBehaviour
         if (!context.canceled)
         {
             // 눌려진 상황(입력을 시작한 상황)
+            Quaternion camY = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0); //카메라의 y회전만 따로 추출
+            inputDirection = camY * inputDirection;
+            targetRotation = Quaternion.LookRotation(inputDirection);
+
             MoveSpeedChange(CurrentMoveMode);
         }
         else
@@ -161,14 +171,15 @@ public class PlayerInputController : MonoBehaviour
     }
 
 
-    void MoveRotate()
-    {
-        Vector3 cameraForward = Camera.main.transform.forward;
-        Vector3 cameraRight = Camera.main.transform.right;
+    //void MoveRotate()
+    //{
+    //    Vector3 cameraForward = Camera.main.transform.forward;
+    //    Vector3 cameraRight = Camera.main.transform.right;
 
-        cameraForward.y = 0;
-        cameraRight.y = 0;
+    //    cameraForward.y = 0;
+    //    cameraRight.y = 0;
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(inputDirection), Time.deltaTime * rotateSpeed);
-    }
+    //    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(inputDirection), 
+    //                                        Time.deltaTime * rotateSpeed);
+    //}
 }
