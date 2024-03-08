@@ -91,6 +91,11 @@ public class PlayerInputController : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    private void Update()
+    {
+        characterController.Move(Time.deltaTime * currentSpeed * inputDirection);
+    }
+
     /// <summary>
     /// 이동 입력 처리용 함수
     /// </summary>
