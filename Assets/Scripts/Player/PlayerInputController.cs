@@ -93,7 +93,8 @@ public class PlayerInputController : MonoBehaviour
 
     private void Update()
     {
-        characterController.Move(Time.deltaTime * currentSpeed * inputDirection);
+        characterController.Move(Time.deltaTime * currentSpeed * inputDirection);   // 좀 더 수동
+        //characterController.SimpleMove(currentSpeed * inputDirection);            // 좀 더 자동
     }
 
     /// <summary>
