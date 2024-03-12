@@ -5,6 +5,8 @@ using UnityEngine;
 public class RandomIdleSelector : StateMachineBehaviour
 {
     readonly int IdleSelect_Hash = Animator.StringToHash("IdleSelect");
+    int prevSelect = 0;
+    public int test = -1;
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -15,28 +17,37 @@ public class RandomIdleSelector : StateMachineBehaviour
     int RandomSelect()
     {
         int select = 0;
-        float num = Random.value;
 
-        if(num < 0.05f)
+        if(prevSelect == 0)
         {
-            select = 4;
+            float num = Random.value;
+
+            if (num < 0.05f)
+            {
+                select = 4;
+            }
+            else if (num < 0.15f)
+            {
+                select = 3;
+            }
+            else if (num < 0.3f)
+            {
+                select = 2;
+            }
+            else if (num < 0.45f)
+            {
+                select = 1;
+            }
+            else
+            {
+                select = 0;
+            }
         }
-        else if(num < 0.15f)
+        if(test != -1)
         {
-            select = 3;
+            select = test;
         }
-        else if(num < 0.3f)
-        {
-            select = 2;
-        }
-        else if(num < 0.45f)
-        {
-            select = 1;
-        }
-        else
-        {
-            select = 0;
-        }
+        
         return select;
     }
 }

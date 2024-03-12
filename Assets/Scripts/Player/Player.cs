@@ -1,17 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    GameObject weapons;
     [SerializeField]Transform weaponParent;
     [SerializeField] Transform shieldParent;
-    private void Start()
+
+    PlayerInputController controller;
+
+    private void Awake()
     {
         weaponParent = FindChildRecursive(transform, "weapon_l");
         shieldParent = FindChildRecursive(transform, "weapon_r");
+
+        controller = GetComponent<PlayerInputController>();
+
+        controller.onMove += OnMoveInput;
+        controller.onMoveModeChange += OnMoveModeChangeInput;
+        controller.onAttack += OnAttackInput;
     }
+
+    private void OnMoveInput(Vector2 vector)
+    {
+    }
+
+    private void OnAttackInput()
+    {
+    }
+
+    private void OnMoveModeChangeInput()
+    {
+    }
+
     public void ShowWeaponAndShield(bool isShow = true)
     {
         weaponParent.gameObject.SetActive(isShow);

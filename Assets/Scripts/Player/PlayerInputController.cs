@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -71,6 +73,11 @@ public class PlayerInputController : MonoBehaviour
     const float AnimatorStopSpeed = 0.0f;
     const float AnimatorWalkSpeed = 0.3f;
     const float AnimatorRunSpeed = 1.0f;
+    readonly int Attack_Hash = Animator.StringToHash("Attack");
+
+    public Action<Vector2> onMove;
+    public Action onMoveModeChange;
+    public Action onAttack;
 
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
@@ -88,10 +95,12 @@ public class PlayerInputController : MonoBehaviour
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
+        inputActions.Player.Attack.performed += OnAttack;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Move.performed -= OnMove;
@@ -113,6 +122,7 @@ public class PlayerInputController : MonoBehaviour
     private void OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         Vector3 input = context.ReadValue<Vector2>();
+        onMove?.Invoke(input);
 
         inputDirection.x = input.x;     // 입력 방향 저장
         inputDirection.y = 0;
@@ -170,16 +180,8 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
-
-    //void MoveRotate()
-    //{
-    //    Vector3 cameraForward = Camera.main.transform.forward;
-    //    Vector3 cameraRight = Camera.main.transform.right;
-
-    //    cameraForward.y = 0;
-    //    cameraRight.y = 0;
-
-    //    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(inputDirection), 
-    //                                        Time.deltaTime * rotateSpeed);
-    //}
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        animator.SetTrigger(Attack_Hash);
+    }
 }

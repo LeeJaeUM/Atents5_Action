@@ -17,7 +17,7 @@ public class WeaponNotShow : StateMachineBehaviour
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        player.ShowWeaponAndShield(true);
     }
 
 
